@@ -10,26 +10,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmakes/compile_option.cmake)
 
 # --- メイン実行ファイルの設定 ---
-add_executable(cpp_project src/main.cpp src/calc.cpp)
+add_executable(cpp_project src/main.cpp)
 target_include_directories(cpp_project PRIVATE include)
 
-# --- テスト環境の設定 ---
+# --- テスト環境の設定（シンプル版） ---
 enable_testing()
 
-# GoogleTest を探す（Homebrew経由）
-find_package(GTest REQUIRED HINTS /opt/homebrew/opt/googletest)
-
-# テスト用実行ファイル
-add_executable(runTests test/test_sample.cpp src/calc.cpp)
-target_include_directories(runTests PRIVATE include /opt/homebrew/opt/googletest/include)
-
-# GoogleTest と pthread をリンク
-target_link_libraries(runTests
-    /opt/homebrew/opt/googletest/lib/libgtest.a
-    /opt/homebrew/opt/googletest/lib/libgtest_main.a
-    pthread
-)
-
-# ctest で実行できるように登録
-add_test(NAME runTests COMMAND runTests)
+# ここでは runTests を作らず、main.cpp の引数モードをテストする
+add_test(NAME Add_3_5 COMMAND cpp_project 3 5)
+set_tests_properties(Add_3_5 PROPERTIES PASS_REGULAR_EXPRESSION "8")
 
